@@ -6,7 +6,7 @@
             aria-hidden="true" id="iconSidenav"></i>
         <a class="navbar-brand m-0" href="https://demos.creative-tim.com/argon-dashboard/pages/dashboard.html"
             target="_blank">
-            <span class="ms-1 font-weight-bold">Backend Admin</span>
+            <span class="ms-1 font-weight-bold">Backend Finance</span>
         </a>
     </div>
     <hr class="horizontal dark mt-0">
@@ -22,21 +22,30 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('events') ? 'active' : '' }}" href="{{ url('events') }}">
-                    <div
-                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-calendar-grid-58 text-dark text-sm opacity-10"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Events</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {{ request()->is('news') ? 'active' : '' }}" href="{{ url('news') }}">
+                <a class="nav-link {{ request()->is('pendapatan') ? 'active' : '' }}" href="{{ url('pendapatan') }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ni ni-collection text-dark text-sm opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">News</span>
+                    <span class="nav-link-text ms-1">Pendapatan</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is('pengeluaran') ? 'active' : '' }}" href="{{ url('pengeluaran') }}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-collection text-dark text-sm opacity-10"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Pengeluaran</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is('invoice') ? 'active' : '' }}" href="{{ url('invoice') }}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-collection text-dark text-sm opacity-10"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Invoice Manual</span>
                 </a>
             </li>
             <li class="nav-item mt-3">
@@ -48,7 +57,7 @@
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Event Schedule</span>
+                    <span class="nav-link-text ms-1">Users</span>
                 </a>
             </li>
         </ul>
