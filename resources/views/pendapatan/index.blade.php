@@ -2,20 +2,27 @@
 
 @section('content')
     <div class="container-fluid py-4">
-        <!-- Cards for Weekly, Monthly, Yearly -->
+        <!-- Cards for Weekly, Monthly, Yearly Revenue -->
         <div class="row">
-            <!-- Weekly Card -->
+            <!-- Weekly Revenue Card -->
             <div class="col-sm-4">
                 <div class="card">
                     <div class="card-body p-3 position-relative">
                         <div class="row">
                             <div class="col-7 text-start">
-                                <p class="text-sm mb-1 text-uppercase font-weight-bold">Weekly</p>
+                                <p class="text-sm mb-1 text-uppercase font-weight-bold">Weekly Revenue</p>
                                 <h5 class="font-weight-bolder mb-0">
-                                    $230,220
+                                    IDR {{ number_format($weeklyRevenue['current_revenue'], 2) }}
                                 </h5>
-                                <span class="text-sm text-end text-danger font-weight-bolder mt-auto mb-0">+55% <span
-                                        class="font-weight-normal text-secondary">from last week</span></span>
+                                <span
+                                    class="text-sm text-end {{ $weeklyRevenue['percentage_change'] >= 0 ? 'text-success' : 'text-danger' }} font-weight-bolder mt-auto mb-0">
+                                    @if ($weeklyRevenue['percentage_change'] >= 0)
+                                        +{{ number_format($weeklyRevenue['percentage_change'], 2) }}%
+                                    @else
+                                        {{ number_format($weeklyRevenue['percentage_change'], 2) }}%
+                                    @endif
+                                    <span class="font-weight-normal text-secondary"> from last week</span>
+                                </span>
                             </div>
                             <div class="col-5">
                                 <div class="dropdown text-end">
@@ -23,25 +30,32 @@
                                         data-bs-toggle="dropdown" aria-expanded="false">
                                         <span class="text-xs text-secondary">Jan 1 - Jan 7, 2024</span>
                                     </a>
-                                    <!-- Dropdown content if needed -->
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Monthly Card -->
+
+            <!-- Monthly Revenue Card -->
             <div class="col-sm-4 mt-sm-0 mt-4">
                 <div class="card">
                     <div class="card-body p-3 position-relative">
                         <div class="row">
                             <div class="col-7 text-start">
-                                <p class="text-sm mb-1 text-uppercase font-weight-bold">Monthly</p>
+                                <p class="text-sm mb-1 text-uppercase font-weight-bold">Monthly Revenue</p>
                                 <h5 class="font-weight-bolder mb-0">
-                                    $3,200,000
+                                    IDR {{ number_format($monthlyRevenue['current_revenue'], 2) }}
                                 </h5>
-                                <span class="text-sm text-end text-danger font-weight-bolder mt-auto mb-0">+12% <span
-                                        class="font-weight-normal text-secondary">from last month</span></span>
+                                <span
+                                    class="text-sm text-end {{ $monthlyRevenue['percentage_change'] >= 0 ? 'text-success' : 'text-danger' }} font-weight-bolder mt-auto mb-0">
+                                    @if ($monthlyRevenue['percentage_change'] >= 0)
+                                        +{{ number_format($monthlyRevenue['percentage_change'], 2) }}%
+                                    @else
+                                        {{ number_format($monthlyRevenue['percentage_change'], 2) }}%
+                                    @endif
+                                    <span class="font-weight-normal text-secondary"> from last month</span>
+                                </span>
                             </div>
                             <div class="col-5">
                                 <div class="dropdown text-end">
@@ -49,33 +63,37 @@
                                         data-bs-toggle="dropdown" aria-expanded="false">
                                         <span class="text-xs text-secondary">January 2024</span>
                                     </a>
-                                    <!-- Dropdown content if needed -->
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Yearly Card -->
+
+            <!-- Yearly Revenue Card -->
             <div class="col-sm-4 mt-sm-0 mt-4">
                 <div class="card">
                     <div class="card-body p-3 position-relative">
                         <div class="row">
-                            <div class="col-7 text-start">
-                                <p class="text-sm mb-1 text-uppercase font-weight-bold">Yearly</p>
+                            <div class="col-10 text-start">
+                                <p class="text-sm mb-1 text-uppercase font-weight-bold">Yearly Revenue</p>
                                 <h5 class="font-weight-bolder mb-0">
-                                    $1,200,000
+                                    IDR {{ number_format($yearlyRevenue['current_revenue'], 2) }}
                                 </h5>
-                                <span class="font-weight-normal text-secondary text-sm"><span
-                                        class="font-weight-bolder">+$213,000</span> from last year</span>
+                                <span class="font-weight-normal text-secondary text-sm">
+                                    <span class="font-weight-bolder">
+                                        +IDR
+                                        {{ number_format($yearlyRevenue['current_revenue'] - $yearlyRevenue['previous_revenue'], 2) }}
+                                    </span>
+                                    from last year
+                                </span>
                             </div>
-                            <div class="col-5">
+                            <div class="col-2">
                                 <div class="dropdown text-end">
                                     <a href="#" class="cursor-pointer text-secondary" id="dropdownUsers3"
                                         data-bs-toggle="dropdown" aria-expanded="false">
                                         <span class="text-xs text-secondary">2024</span>
                                     </a>
-                                    <!-- Dropdown content if needed -->
                                 </div>
                             </div>
                         </div>
@@ -90,95 +108,104 @@
             <div class="col-lg-8 col-sm-6">
                 <div class="card h-100">
                     <div class="card-header pb-0 p-3">
-                        <h6 class="mb-0">Expenses by Category and Venue</h6>
+                        <h6 class="mb-0">Revenue by Category and Venue</h6>
                     </div>
                     <div class="card-body p-3">
                         <div class="chart">
                             <div style="position: relative; height:400px;">
-                                <canvas id="expenseBarChart" class="chart-canvas"></canvas>
+                                <canvas id="lineChart" class="chart-canvas"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- Pie Chart -->
-            <div class="col-lg-4 col-sm-6 mt-sm-0 mt-4">
+            <div class="col-lg-4 col-sm-6 mt-sm-0 mt -4">
                 <div class="card h-100">
                     <div class="card-header pb-0 p-3">
-                        <h6 class="mb-0">Expense Percentage by Category</h6>
+                        <h6 class="mb-0">Revenue Percentage by Category</h6>
                     </div>
                     <div class="card-body pb-0 p-3 mt-4">
                         <div class="chart">
-                            <canvas id="expensePieChart" class="chart-canvas" height="400"></canvas>
-                        </div>
-                        <!-- Legend -->
-                        <div class="mt-3">
-                            <span class="badge badge-md badge-dot me-4">
-                                <i class="bg-info"></i>
-                                <span class="text-dark text-xs">Marketing</span>
-                            </span>
-                            <span class="badge badge-md badge-dot me-4">
-                                <i class="bg-primary"></i>
-                                <span class="text-dark text-xs">Operational</span>
-                            </span>
-                            <span class="badge badge-md badge-dot me-4">
-                                <i class="bg-success"></i>
-                                <span class="text-dark text-xs">Salary</span>
-                            </span>
-                            <!-- Add more categories if needed -->
+                            <canvas id="pieChart" class="chart-canvas" height="400"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Expenses Table -->
+        <!-- Revenue Table -->
         <div class="row mt-4">
             <div class="col-12">
                 <div class="card">
-                    <!-- Header with Add Expense Button -->
+                    <!-- Header with Add Revenue Button -->
                     <div class="d-sm-flex justify-content-between m-3">
                         <div>
                             <a href="#" class="btn btn-icon btn-outline-blue" data-bs-toggle="modal"
-                                data-bs-target="#addExpenseModal">
-                                Add Expense
+                                data-bs-target="#addRevenueModal">
+                                Add Revenue
                             </a>
                         </div>
                     </div>
                     <!-- Table -->
                     <div class="table-responsive">
-                        <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
-                            <div class="dataTable-container">
-                                <table class="table table-flush dataTable-table" id="datatable-expense">
-                                    <thead class="thead-light">
-                                        <tr>
-                                            <th>Expense ID</th>
-                                            <th>Category</th>
-                                            <th>Expense Price</th>
-                                            <th>Quantity</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Example data row -->
-                                        <tr>
-                                            <td>#EXP001</td>
-                                            <td>Marketing</td>
-                                            <td>$5,000</td>
-                                            <td>1</td>
-                                        </tr>
-                                        <!-- Add more data rows as needed -->
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- Pagination if needed -->
-                        </div>
+                        <table class="table table-flush dataTable-table" id="datatable-revenue">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Revenue ID</th>
+                                    <th>Category</th>
+                                    <th>Revenue Amount</th>
+                                    <th>Quantity</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($allRevenueData as $revenue)
+                                    <tr>
+                                        <td>{{ $revenue->revenue_id }}</td>
+                                        <td>{{ $revenue->category }}</td>
+                                        <td>IDR {{ number_format($revenue->revenue_amount, 2) }}</td>
+                                        <td>{{ $revenue->quantity }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($revenue->created_at)->format('d M Y') }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                        {{-- Pagination Kustom --}}
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-end">
+                                {{-- Tombol Previous --}}
+                                <li class="page-item {{ $allRevenueData->onFirstPage() ? 'disabled' : '' }}">
+                                    <a class="page-link" href="{{ $allRevenueData->previousPageUrl() }}" tabindex="-1">
+                                        <i class="fa fa-angle-left"></i>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+
+                                {{-- Tombol Halaman --}}
+                                @for ($i = 1; $i <= $allRevenueData->lastPage(); $i++)
+                                    <li class="page-item {{ $allRevenueData->currentPage() == $i ? 'active' : '' }}">
+                                        <a class="page-link" href="{{ $allRevenueData->url($i) }}">{{ $i }}</a>
+                                    </li>
+                                @endfor
+
+                                {{-- Tombol Next --}}
+                                <li class="page-item {{ !$allRevenueData->hasMorePages() ? 'disabled' : '' }}">
+                                    <a class="page-link" href="{{ $allRevenueData->nextPageUrl() }}">
+                                        <i class="fa fa-angle-right"></i>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Add Expense Modal -->
-        <div class="modal fade" id="addExpenseModal" tabindex="-1" aria-labelledby="addExpenseModalLabel"
+        <!-- Add Revenue Modal -->
+        <div class="modal fade" id="addRevenueModal" tabindex="-1" aria-labelledby="addRevenueModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -186,23 +213,23 @@
                         <!-- CSRF Token if using Laravel -->
                         @csrf
                         <div class="modal-header">
-                            <h5 class="modal-title" id="addExpenseModalLabel">Add Expense</h5>
+                            <h5 class="modal-title" id="addRevenueModalLabel">Add Revenue</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <!-- Form fields -->
                             <div class="mb-3">
-                                <label for="expenseName" class="form-label">Expense Name</label>
-                                <input type="text" class="form-control" id="expenseName" name="expenseName" required>
+                                <label for="revenueName" class="form-label">Revenue Name</label>
+                                <input type="text" class="form-control" id="revenueName" name="revenueName" required>
                             </div>
                             <div class="mb-3">
-                                <label for="rateIDR" class="form-label">Rate IDR Expense</label>
+                                <label for="rateIDR" class="form-label">Rate IDR Revenue</label>
                                 <input type="number" class="form-control" id="rateIDR" name="rateIDR" required>
                             </div>
                             <div class="mb-3">
-                                <label for="expensePrice" class="form-label">Expense Price</label>
-                                <input type="number" class="form-control" id="expensePrice" name="expensePrice"
+                                <label for="revenueAmount" class="form-label">Revenue Amount</label>
+                                <input type="number" class="form-control" id="revenueAmount" name="revenueAmount"
                                     required>
                             </div>
                             <div class="mb-3">
@@ -218,9 +245,9 @@
                                 <label for="paymentCategory" class="form-label">Payment Category</label>
                                 <select class="form-select" id="paymentCategory" name="paymentCategory" required>
                                     <option value="">Select Category</option>
-                                    <option value="Marketing">Marketing</option>
-                                    <option value="Operational">Operational</option>
-                                    <option value="Salary">Salary</option>
+                                    <option value="Product Sales">Product Sales</option>
+                                    <option value="Service Revenue">Service Revenue</option>
+                                    <option value="Other Income">Other Income</option>
                                     <!-- Add more categories if needed -->
                                 </select>
                             </div>
@@ -231,7 +258,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save Expense</button>
+                            <button type="submit" class="btn btn-primary">Save Revenue</button>
                         </div>
                     </form>
                 </div>
@@ -248,37 +275,86 @@
 
 @push('scripts')
     <script>
-        // Data for Bar Chart
-        var ctxBar = document.getElementById('expenseBarChart').getContext('2d');
-        var expenseBarChart = new Chart(ctxBar, {
-            type: 'bar',
-            data: {
-                labels: ['Venue A', 'Venue B', 'Venue C'],
-                datasets: [{
-                        label: 'Marketing',
-                        data: [5000, 3000, 4000],
-                        backgroundColor: '#17a2b8'
-                    },
-                    {
-                        label: 'Operational',
-                        data: [2000, 4000, 3000],
-                        backgroundColor: '#007bff'
-                    },
-                    {
-                        label: 'Salary',
-                        data: [7000, 8000, 6000],
-                        backgroundColor: '#28a745'
-                    }
-                ]
-            },
+        // Inisialisasi Pie Chart
+        const pieData = {
+            labels: ['Ticket', 'Exhibitor', 'Sponsor', 'Advertisement'],
+            datasets: [{
+                data: [
+                    {{ $revenueByCategory['ticket'] }},
+                    {{ $revenueByCategory['exhibitor'] }},
+                    {{ $revenueByCategory['sponsor'] }},
+                    {{ $revenueByCategory['advertisement'] }},
+                ],
+                backgroundColor: ['#ff6384', '#36a2eb', '#cc65fe', '#ffce56'],
+            }]
+        };
+
+        // Inisialisasi Line Chart Data (Multiple Lines per Category)
+        const lineData = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                    label: 'Ticket',
+                    data: [
+                        @foreach ($yearlyRevenueByCategory['ticket'] as $revenue)
+                            {{ $revenue }},
+                        @endforeach
+                    ],
+                    fill: false,
+                    borderColor: '#ff6384',
+                    tension: 0.1
+                },
+                {
+                    label: 'Exhibitor',
+                    data: [
+                        @foreach ($yearlyRevenueByCategory['exhibitor'] as $revenue)
+                            {{ $revenue }},
+                        @endforeach
+                    ],
+                    fill: false,
+                    borderColor: '#36a2eb',
+                    tension: 0.1
+                },
+                {
+                    label: 'Sponsor',
+                    data: [
+                        @foreach ($yearlyRevenueByCategory['sponsor'] as $revenue)
+                            {{ $revenue }},
+                        @endforeach
+                    ],
+                    fill: false,
+                    borderColor: '#cc65fe',
+                    tension: 0.1
+                },
+                {
+                    label: 'Advertisement',
+                    data: [
+                        @foreach ($yearlyRevenueByCategory['advertisement'] as $revenue)
+                            {{ $revenue }},
+                        @endforeach
+                    ],
+                    fill: false,
+                    borderColor: '#ffce56',
+                    tension: 0.1
+                }
+            ]
+        };
+
+
+        // Membuat Pie Chart
+        const pieChartContext = document.getElementById('pieChart').getContext('2d');
+        new Chart(pieChartContext, {
+            type: 'pie',
+            data: pieData,
             options: {
                 responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return '$' + value.toLocaleString();
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': IDR ' + tooltipItem.raw.toLocaleString();
                             }
                         }
                     }
@@ -286,23 +362,33 @@
             }
         });
 
-        // Data for Pie Chart
-        var ctxPie = document.getElementById('expensePieChart').getContext('2d');
-        var expensePieChart = new Chart(ctxPie, {
-            type: 'pie',
-            data: {
-                labels: ['Marketing', 'Operational', 'Salary'],
-                datasets: [{
-                    data: [40, 30, 30],
-                    backgroundColor: ['#17a2b8', '#007bff', '#28a745'],
-                    hoverBackgroundColor: ['#17a2b8', '#007bff', '#28a745']
-                }]
-            },
+        // Membuat Line Chart
+        const lineChartContext = document.getElementById('lineChart').getContext('2d');
+        new Chart(lineChartContext, {
+            type: 'line',
+            data: lineData,
             options: {
                 responsive: true,
                 plugins: {
                     legend: {
-                        display: false
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return 'IDR ' + tooltipItem.raw.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return 'IDR ' + value.toLocaleString();
+                            }
+                        }
                     }
                 }
             }

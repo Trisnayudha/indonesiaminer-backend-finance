@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\PendapatanController;
+use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,9 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/test', function () {
-    return view('pdf.template-receipt');
-});
+Route::get('/test', [TestController::class, 'index']);
 
 Route::get('/', function () {
     return view('dashboard.index');
@@ -31,9 +31,7 @@ Route::get('/analytic', function () {
     return view('analytic.index');
 });
 
-Route::get('/pendapatan', function () {
-    return view('pendapatan.index');
-});
+Route::get('/pendapatan', [PendapatanController::class, 'index']);
 
 Route::get('/pengeluaran', function () {
     return view('pengeluaran.index');
