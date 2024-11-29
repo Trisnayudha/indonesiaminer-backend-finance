@@ -4,81 +4,34 @@
     <div class="container-fluid py-4">
         <!-- Cards for Weekly, Monthly, Yearly -->
         <div class="row">
-            <!-- Weekly Card -->
-            <div class="col-sm-4">
+            <!-- Revenue Cards -->
+            <div class="col-md-4">
                 <div class="card">
-                    <div class="card-body p-3 position-relative">
-                        <div class="row">
-                            <div class="col-7 text-start">
-                                <p class="text-sm mb-1 text-uppercase font-weight-bold">Weekly</p>
-                                <h5 class="font-weight-bolder mb-0">
-                                    $230,220
-                                </h5>
-                                <span class="text-sm text-end text-danger font-weight-bolder mt-auto mb-0">+55% <span
-                                        class="font-weight-normal text-secondary">from last week</span></span>
-                            </div>
-                            <div class="col-5">
-                                <div class="dropdown text-end">
-                                    <a href="#" class="cursor-pointer text-secondary" id="dropdownUsers1"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                        <span class="text-xs text-secondary">Jan 1 - Jan 7, 2024</span>
-                                    </a>
-                                    <!-- Dropdown content if needed -->
-                                </div>
-                            </div>
-                        </div>
+                    <div class="card-header">
+                        <h5>Weekly Revenue</h5>
+                    </div>
+                    <div class="card-body">
+                        <h4>Rp {{ number_format($weeklyRevenue, 0, ',', '.') }}</h4>
                     </div>
                 </div>
             </div>
-            <!-- Monthly Card -->
-            <div class="col-sm-4 mt-sm-0 mt-4">
+            <div class="col-md-4">
                 <div class="card">
-                    <div class="card-body p-3 position-relative">
-                        <div class="row">
-                            <div class="col-7 text-start">
-                                <p class="text-sm mb-1 text-uppercase font-weight-bold">Monthly</p>
-                                <h5 class="font-weight-bolder mb-0">
-                                    $3,200,000
-                                </h5>
-                                <span class="text-sm text-end text-danger font-weight-bolder mt-auto mb-0">+12% <span
-                                        class="font-weight-normal text-secondary">from last month</span></span>
-                            </div>
-                            <div class="col-5">
-                                <div class="dropdown text-end">
-                                    <a href="#" class="cursor-pointer text-secondary" id="dropdownUsers2"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                        <span class="text-xs text-secondary">January 2024</span>
-                                    </a>
-                                    <!-- Dropdown content if needed -->
-                                </div>
-                            </div>
-                        </div>
+                    <div class="card-header">
+                        <h5>Monthly Revenue</h5>
+                    </div>
+                    <div class="card-body">
+                        <h4>Rp {{ number_format($monthlyRevenue, 0, ',', '.') }}</h4>
                     </div>
                 </div>
             </div>
-            <!-- Yearly Card -->
-            <div class="col-sm-4 mt-sm-0 mt-4">
+            <div class="col-md-4">
                 <div class="card">
-                    <div class="card-body p-3 position-relative">
-                        <div class="row">
-                            <div class="col-7 text-start">
-                                <p class="text-sm mb-1 text-uppercase font-weight-bold">Yearly</p>
-                                <h5 class="font-weight-bolder mb-0">
-                                    $1,200,000
-                                </h5>
-                                <span class="font-weight-normal text-secondary text-sm"><span
-                                        class="font-weight-bolder">+$213,000</span> from last year</span>
-                            </div>
-                            <div class="col-5">
-                                <div class="dropdown text-end">
-                                    <a href="#" class="cursor-pointer text-secondary" id="dropdownUsers3"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                        <span class="text-xs text-secondary">2024</span>
-                                    </a>
-                                    <!-- Dropdown content if needed -->
-                                </div>
-                            </div>
-                        </div>
+                    <div class="card-header">
+                        <h5>Yearly Revenue</h5>
+                    </div>
+                    <div class="card-body">
+                        <h4>Rp {{ number_format($yearlyRevenue, 0, ',', '.') }}</h4>
                     </div>
                 </div>
             </div>
@@ -111,22 +64,6 @@
                         <div class="chart">
                             <canvas id="expensePieChart" class="chart-canvas" height="400"></canvas>
                         </div>
-                        <!-- Legend -->
-                        <div class="mt-3">
-                            <span class="badge badge-md badge-dot me-4">
-                                <i class="bg-info"></i>
-                                <span class="text-dark text-xs">Marketing</span>
-                            </span>
-                            <span class="badge badge-md badge-dot me-4">
-                                <i class="bg-primary"></i>
-                                <span class="text-dark text-xs">Operational</span>
-                            </span>
-                            <span class="badge badge-md badge-dot me-4">
-                                <i class="bg-success"></i>
-                                <span class="text-dark text-xs">Salary</span>
-                            </span>
-                            <!-- Add more categories if needed -->
-                        </div>
                     </div>
                 </div>
             </div>
@@ -155,21 +92,49 @@
                                             <th>Expense ID</th>
                                             <th>Category</th>
                                             <th>Expense Price</th>
-                                            <th>Quantity</th>
+                                            <th>Type</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <!-- Example data row -->
-                                        <tr>
-                                            <td>#EXP001</td>
-                                            <td>Marketing</td>
-                                            <td>$5,000</td>
-                                            <td>1</td>
-                                        </tr>
+                                        @foreach ($getData as $item)
+                                            <tr>
+                                                <td>#{{ $item->code_payment }}</td>
+                                                <td>{{ $item->expense_name }}</td>
+                                                <td>{{ number_format($item->total_price, 0, ',', '.') }}</td>
+                                                <td>{{ $item->payment_type }}</td>
+                                            </tr>
+                                        @endforeach
                                         <!-- Add more data rows as needed -->
                                     </tbody>
                                 </table>
                             </div>
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-end">
+                                    {{-- Tombol Previous --}}
+                                    <li class="page-item {{ $getData->onFirstPage() ? 'disabled' : '' }}">
+                                        <a class="page-link" href="{{ $getData->previousPageUrl() }}" tabindex="-1">
+                                            <i class="fa fa-angle-left"></i>
+                                            <span class="sr-only">Previous</span>
+                                        </a>
+                                    </li>
+
+                                    {{-- Tombol Halaman --}}
+                                    @for ($i = 1; $i <= $getData->lastPage(); $i++)
+                                        <li class="page-item {{ $getData->currentPage() == $i ? 'active' : '' }}">
+                                            <a class="page-link" href="{{ $getData->url($i) }}">{{ $i }}</a>
+                                        </li>
+                                    @endfor
+
+                                    {{-- Tombol Next --}}
+                                    <li class="page-item {{ !$getData->hasMorePages() ? 'disabled' : '' }}">
+                                        <a class="page-link" href="{{ $getData->nextPageUrl() }}">
+                                            <i class="fa fa-angle-right"></i>
+                                            <span class="sr-only">Next</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
                             <!-- Pagination if needed -->
                         </div>
                     </div>
@@ -187,8 +152,7 @@
                         @csrf
                         <div class="modal-header">
                             <h5 class="modal-title" id="addExpenseModalLabel">Add Expense</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <!-- Form fields -->
@@ -202,8 +166,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="expensePrice" class="form-label">Expense Price</label>
-                                <input type="number" class="form-control" id="expensePrice" name="expensePrice"
-                                    required>
+                                <input type="number" class="form-control" id="expensePrice" name="expensePrice" required>
                             </div>
                             <div class="mb-3">
                                 <label for="paymentType" class="form-label">Payment Type</label>
@@ -246,28 +209,17 @@
 
 @push('scripts')
     <script>
-        // Data for Bar Chart
+        // Bar Chart Data
         var ctxBar = document.getElementById('expenseBarChart').getContext('2d');
         var expenseBarChart = new Chart(ctxBar, {
             type: 'bar',
             data: {
-                labels: ['Venue A', 'Venue B', 'Venue C'],
+                labels: @json($barChartData['categories']),
                 datasets: [{
-                        label: 'Marketing',
-                        data: [5000, 3000, 4000],
-                        backgroundColor: '#17a2b8'
-                    },
-                    {
-                        label: 'Operational',
-                        data: [2000, 4000, 3000],
-                        backgroundColor: '#007bff'
-                    },
-                    {
-                        label: 'Salary',
-                        data: [7000, 8000, 6000],
-                        backgroundColor: '#28a745'
-                    }
-                ]
+                    label: 'Expense by Category',
+                    data: @json($barChartData['totals']),
+                    backgroundColor: '#007bff' // Customize color
+                }]
             },
             options: {
                 responsive: true,
@@ -276,7 +228,7 @@
                         beginAtZero: true,
                         ticks: {
                             callback: function(value) {
-                                return '$' + value.toLocaleString();
+                                return 'Rp ' + value.toLocaleString();
                             }
                         }
                     }
@@ -284,23 +236,23 @@
             }
         });
 
-        // Data for Pie Chart
+        // Pie Chart Data
         var ctxPie = document.getElementById('expensePieChart').getContext('2d');
         var expensePieChart = new Chart(ctxPie, {
             type: 'pie',
             data: {
-                labels: ['Marketing', 'Operational', 'Salary'],
+                labels: @json($pieChartData['labels']),
                 datasets: [{
-                    data: [40, 30, 30],
-                    backgroundColor: ['#17a2b8', '#007bff', '#28a745'],
-                    hoverBackgroundColor: ['#17a2b8', '#007bff', '#28a745']
+                    data: @json($pieChartData['data']),
+                    backgroundColor: @json($pieChartData['backgroundColors']),
+                    hoverBackgroundColor: @json($pieChartData['backgroundColors'])
                 }]
             },
             options: {
                 responsive: true,
                 plugins: {
                     legend: {
-                        display: false
+                        display: true
                     }
                 }
             }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PendapatanController;
+use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,4 @@ Route::get('/analytic', function () {
 
 Route::get('/pendapatan', [PendapatanController::class, 'index']);
 
-Route::get('/pengeluaran', function () {
-    return view('pengeluaran.index');
-});
+Route::get('/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index');
