@@ -46,11 +46,11 @@ return [
 
         'mysql_miner' => [
             'driver' => 'mysql',
-            'host' => env('DB_MINER_HOST', '127.0.0.1'),
+            'host' => env('DB_MINER_HOST', '103.82.241.65'),
             'port' => env('DB_MINER_PORT', '3306'),
-            'database' => env('DB_MINER_DATABASE', 'db_miner'),
-            'username' => env('DB_MINER_USERNAME', 'root'),
-            'password' => env('DB_MINER_PASSWORD', ''),
+            'database' => env('DB_MINER_DATABASE', 'db_prod'),
+            'username' => env('DB_MINER_USERNAME', 'db_prod'),
+            'password' => env('DB_MINER_PASSWORD', '3LWH6X7rF8nMyjwm'),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',

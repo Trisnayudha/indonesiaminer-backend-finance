@@ -37,7 +37,6 @@ class PendapatanService
     {
         $currentMonthlyRevenue = $this->getRevenueForPeriod(now()->startOfMonth(), now());
         $previousMonthlyRevenue = $this->getRevenueForPeriod(now()->subMonth()->startOfMonth(), now()->subMonth()->endOfMonth());
-
         $percentageChange = $this->calculatePercentageChange($previousMonthlyRevenue, $currentMonthlyRevenue);
 
         return [
@@ -68,16 +67,16 @@ class PendapatanService
     private function getRevenueForPeriod($startDate, $endDate)
     {
         return DB::connection('mysql_miner')->table('payment')->where('status', 'Paid Off')
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->sum('total_price')
+            ->whereBetween('updated_at', [$startDate, $endDate])
+            ->sum('event_price')
             + DB::connection('mysql')->table('payment_sponsors')->where('status', 'paid')
-            ->whereBetween('created_at', [$startDate, $endDate])
+            ->whereBetween('updated_at', [$startDate, $endDate])
             ->sum('total_price')
             + DB::connection('mysql_miner')->table('exhibition_payment')->where('status', 'paid')
-            ->whereBetween('created_at', [$startDate, $endDate])
+            ->whereBetween('updated_at', [$startDate, $endDate])
             ->sum('total_price')
             + DB::connection('mysql')->table('payment_advertisements')->where('status', 'paid')
-            ->whereBetween('created_at', [$startDate, $endDate])
+            ->whereBetween('updated_at', [$startDate, $endDate])
             ->sum('total_price');
     }
 
@@ -87,7 +86,7 @@ class PendapatanService
         return [
             'ticket' => DB::connection('mysql_miner')->table('payment')->where('status', 'Paid Off')
                 ->whereBetween('created_at', [$startDate, $endDate])
-                ->sum('total_price'),
+                ->sum('event_price'),
 
             'exhibitor' => DB::connection('mysql_miner')->table('exhibition_payment')->where('status', 'paid')
                 ->whereBetween('created_at', [$startDate, $endDate])
@@ -151,20 +150,19 @@ class PendapatanService
 
         switch ($category) {
             case 'ticket':
-                return DB::connection('mysql_miner')->table('payment')->where('status', 'Paid Off')
-                    ->whereBetween('created_at', [$startDate, $endDate])
-                    ->sum('total_price');
+                return DB::connection('mysql_miner')->table('payment')->whereBetween('updated_at', [$startDate, $endDate])->where('status', 'Paid Off')
+                    ->sum('event_price');
             case 'advertisement':
                 return DB::connection('mysql')->table('payment_advertisements')->where('status', 'paid')
-                    ->whereBetween('created_at', [$startDate, $endDate])
+                    ->whereBetween('updated_at', [$startDate, $endDate])
                     ->sum('total_price');
             case 'exhibitor':
                 return DB::connection('mysql_miner')->table('exhibition_payment')->where('status', 'paid')
-                    ->whereBetween('created_at', [$startDate, $endDate])
+                    ->whereBetween('updated_at', [$startDate, $endDate])
                     ->sum('total_price');
             case 'sponsor':
                 return DB::connection('mysql')->table('payment_sponsors')->where('status', 'paid')
-                    ->whereBetween('created_at', [$startDate, $endDate])
+                    ->whereBetween('updated_at', [$startDate, $endDate])
                     ->sum('total_price');
             default:
                 return 0;
@@ -177,11 +175,14 @@ class PendapatanService
         $ticketRevenues = DB::connection('mysql_miner')->table('payment')->select(
             DB::raw("'Ticket' as category"),
             'code_payment as revenue_id', // Gunakan code_payment
-            'total_price as revenue_amount',
+            'event_price as revenue_amount',
             DB::raw('1 as quantity'),
-            'created_at'
+            'created_at',
+            'payment_method'
         )
-            ->where('status', 'Paid Off');
+            ->where('status', 'Paid Off')
+            ->where('events_id', '13');
+
 
         // Query untuk Exhibitor (dari db_miner)
         $exhibitorRevenues = DB::connection('mysql_miner')->table('exhibition_payment')->select(

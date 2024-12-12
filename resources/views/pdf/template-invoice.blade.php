@@ -6,10 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice</title>
     <style>
+        /* Styling tetap sama seperti sebelumnya */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
+            position: relative;
         }
 
         .header {
@@ -189,6 +191,38 @@
                 /* Margin halaman untuk printer */
             }
         }
+
+        .paid-stamp {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            font-weight: bold;
+            color: rgba(0, 128, 0, 0.3);
+            /* Warna hijau transparan */
+            text-transform: uppercase;
+            border: 5px solid rgba(0, 128, 0, 0.3);
+            padding: 10px 40px;
+            border-radius: 10px;
+            transform: rotate(-15deg);
+        }
+
+        /* Kelas untuk Stempel Unpaid */
+        .unpaid-stamp {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            font-size: 48px;
+            font-weight: bold;
+            color: rgba(255, 0, 0, 0.3);
+            /* Warna merah transparan */
+            text-transform: uppercase;
+            border: 5px solid rgba(255, 0, 0, 0.3);
+            padding: 10px 40px;
+            border-radius: 10px;
+        }
     </style>
 </head>
 
@@ -210,25 +244,24 @@
 
     <div class="invoice-header">
         <div class="to-section">
-            <p><strong>TO:</strong> SCANTECH INTERNATIONAL PTY LTD</p>
-            <p>Mr. Ryan Khoo<br>
-                Sales & Marketing Officer<br>
-                143 Mooringe Avenue, Camden Park, South Australia, Australia 5038<br>
-                <strong>T:</strong> +61438830954 | <strong>E:</strong> R.Khoo@scantech.com.au
+            <p><strong>TO:</strong> {{ $invoice->client_name }}</p>
+            <p>{{ $invoice->client_job_title }}<br>
+                {{ $invoice->client_address }}<br>
+                <strong>T:</strong> {{ $invoice->client_telephone }} | <strong>E:</strong> {{ $invoice->client_email }}
             </p>
         </div>
         <div class="invoice-details">
             <table>
                 <tr>
                     <th>Invoice Date</th>
-                    <td>Tuesday, August 27, 2024</td>
+                    <td>{{ \Carbon\Carbon::parse($invoice->invoice_date)->format('l, F d, Y') }}</td>
                 </tr>
                 <tr>
                     <th>Invoice Number</th>
-                    <td>02501</td>
+                    <td>{{ $invoice->invoice_number }}</td>
                 </tr>
                 <tr>
-                    <td colspan="2" class="highlight">INDONESIA MINER CONFERENCE 2025</td>
+                    <td colspan="2" class="highlight">{{ $invoice->notes ?? 'INVOICE DETAILS' }}</td>
                 </tr>
             </table>
         </div>
@@ -240,40 +273,87 @@
                 <th>No</th>
                 <th>Description</th>
                 <th>Type</th>
-                <th>Price (USD)</th>
-                <th>Total (USD)</th>
+                <th>Price (IDR)</th>
+                @if (isset($invoice->rate_idr) && $invoice->rate_idr > 0)
+                    <th>Price (USD)</th>
+                @endif
+                @if (isset($invoice->rate_idr) && $invoice->rate_idr > 0)
+                    <th>Total (USD)</th>
+                @endif
             </tr>
         </thead>
         <tbody>
+            @foreach ($invoice->items as $index => $item)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>
+                        {!! nl2br(e($item->description)) !!}
+                    </td>
+                    <td>{{ strtoupper($item->description) }}</td>
+                    <td>{{ number_format($item->unit_price, 0, ',', '.') }}</td>
+                    @if (isset($invoice->rate_idr) && $invoice->rate_idr > 0)
+                        <td>{{ number_format($item->unit_price / $invoice->rate_idr, 2, '.', ',') }}</td>
+                    @endif
+                    @if (isset($invoice->rate_idr) && $invoice->rate_idr > 0)
+                        <td>{{ number_format($item->total / $invoice->rate_idr, 2, '.', ',') }}</td>
+                    @endif
+                </tr>
+            @endforeach
+
+            <!-- Baris Total di Dalam Tabel -->
             <tr>
-                <td>1</td>
-                <td>
-                    Indonesia Miner Conference & Exhibition 2025: June 10 - 12, 2025<br>
-                    Standard Plus booth package (Basic Design) - Booth No. 10<br>
-                    <ul>
-                        <li>Basic Design (3m x 2m / 6 SQM) - equipped with Walls, Carpet, Fascia, 1 Table, 2 Chairs, 2
-                            Amp Electricity</li>
-                        <li>2 Exhibitor Passes</li>
-                        <li>50 Wishlist for Mining Passes</li>
-                        <li>Listing at Indonesia Miner Directory</li>
-                        <li>Company Logo and Profile on Event Booklet</li>
-                        <li>Social Media Promotional Content</li>
-                    </ul>
-                </td>
-                <td>STANDARD PLUS</td>
-                <td>5,000</td>
-                <td>5,000</td>
+                <td colspan="3">IDR: {{ $invoice->rate_idr }}</td>
+
+                <td colspan="2" style="text-align: right;"><strong>Total in USD:</strong></td>
+
+                <td>{{ number_format($subtotal / $invoice->rate_idr, 2, '.', ',') }}</td>
+
+            </tr>
+
+
+            <tr>
+                <td colspan="3">KMK Nomor:51/KM.10/KF.4/2024</td>
+                <td colspan="2" style="text-align: right;"><strong>Total in IDR:</strong></td>
+                <td>{{ number_format($subtotal, 0, ',', '.') }}</td>
+            </tr>
+
+            @if ($invoice->ppn_rate > 0 && $invoice->ppn_amount > 0)
+                <tr>
+                    @if (isset($invoice->rate_idr) && $invoice->rate_idr > 0)
+                        <td colspan="5" style="text-align: right;"><strong>VAT ({{ $invoice->ppn_rate }}%)
+                                IDR:</strong></td>
+                    @else
+                        <td colspan="4" style="text-align: right;"><strong>VAT ({{ $invoice->ppn_rate }}%)
+                                IDR:</strong></td>
+                    @endif
+                    @if (isset($invoice->rate_idr) && $invoice->rate_idr > 0)
+                        <td>{{ number_format($invoice->ppn_amount, 0, ',', '.') }}</td>
+                    @else
+                        <td>{{ number_format($invoice->ppn_amount, 0, ',', '.') }}</td>
+                    @endif
+                </tr>
+            @endif
+
+            <tr>
+                @if (isset($invoice->rate_idr) && $invoice->rate_idr > 0)
+                    <td colspan="{{ isset($invoice->rate_idr) && $invoice->rate_idr > 0 ? 5 : 4 }}"
+                        style="text-align: right;"><strong>Grand Total:</strong></td>
+                @else
+                    <td colspan="4" style="text-align: right;"><strong>Grand Total:</strong></td>
+                @endif
+                @if (isset($invoice->rate_idr) && $invoice->rate_idr > 0)
+                    <td>{{ number_format($grandTotal / $invoice->rate_idr, 2, '.', ',') }}</td>
+                @else
+                    <td>{{ number_format($grandTotal, 0, ',', '.') }}</td>
+                @endif
             </tr>
         </tbody>
     </table>
 
-    <div class="total-section">
-        <p><strong>Total in USD:</strong> 5,000</p>
-        <p><strong>Total in IDR:</strong> 78,945,000</p>
-    </div>
-
     <div class="additional-info">
-        <p><strong>Price Excluding VAT</strong></p>
+        @if (!empty($invoice->ppn_rate))
+            <p><strong>Price Excluding VAT</strong></p>
+        @endif
         <p>
             All Booking require payment of 100% of total package price within 14 days after invoice date.<br>
             Cancellation: Show management must receive written notice of cancellation. There is a 50% processing fee
@@ -291,13 +371,18 @@
         SWIFT CODE : BMRIIDJA
     </div>
 
+    @if ($invoice->payment_status === 'Paid')
+        <div class="paid-stamp">PAID</div>
+    @elseif($invoice->payment_status === 'Unpaid')
+        <div class="unpaid-stamp">UNPAID</div>
+    @endif
+
     <div class="footer">
         <div class="signature">
             <div class="line"></div>
             Shofwatunnikmah
         </div>
     </div>
-
 
 </body>
 

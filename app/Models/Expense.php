@@ -11,10 +11,28 @@ class Expense extends Model
 
     protected $fillable = [
         'expense_name',
-        'total_price',
+        'payment_date',
+        'base_price',
+        'admin_fee',
+        'quantity',
+        'total',
+        'ppn_rate',
+        'ppn_amount',
         'payment_type',
-        'expense_category',
-        'quantity'
+        'payment_category',
+        'invoice_number',
+        'remarks',
+        'attachment',
+    ];
+
+    protected $casts = [
+        'payment_date' => 'date',
+        'base_price' => 'integer',
+        'admin_fee' => 'integer',
+        'quantity' => 'integer',
+        'total' => 'integer',
+        'ppn_rate' => 'integer',
+        'ppn_amount' => 'integer',
     ];
 
     public function details()
