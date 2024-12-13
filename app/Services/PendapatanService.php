@@ -64,7 +64,7 @@ class PendapatanService
     }
 
     // Menghitung total pendapatan dalam periode tertentu
-    private function getRevenueForPeriod($startDate, $endDate)
+    public function getRevenueForPeriod($startDate, $endDate)
     {
         return DB::connection('mysql_miner')->table('payment')->where('status', 'Paid Off')
             ->whereBetween('updated_at', [$startDate, $endDate])

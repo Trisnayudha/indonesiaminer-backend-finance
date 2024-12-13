@@ -20,7 +20,7 @@ class PengeluaranService
 
         // Filter expenses created within the week
         $weeklyExpenses = Expense::whereBetween('created_at', [$startOfWeek, $endOfWeek])
-            ->sum('total_price');
+            ->sum('total');
 
         return $weeklyExpenses;
     }
@@ -33,7 +33,7 @@ class PengeluaranService
 
         // Filter expenses created within the month
         $monthlyExpenses = Expense::whereBetween('created_at', [$startOfMonth, $endOfMonth])
-            ->sum('total_price');
+            ->sum('total');
 
         return $monthlyExpenses;
     }
@@ -46,7 +46,7 @@ class PengeluaranService
 
         // Filter expenses created within the year
         $yearlyExpenses = Expense::whereBetween('created_at', [$startOfYear, $endOfYear])
-            ->sum('total_price');
+            ->sum('total');
 
         return $yearlyExpenses;
     }

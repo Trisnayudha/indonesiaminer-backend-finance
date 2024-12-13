@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PendapatanController;
 use App\Http\Controllers\PengeluaranController;
@@ -19,9 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/test', [TestController::class, 'index']);
 
-Route::get('/', function () {
-    return view('dashboard.index');
-});
+Route::get('/', [DashboardController::class, 'index']);
 
 // Rute untuk daftar invoice
 Route::get('/invoice', [InvoiceController::class, 'index'])->name('invoice.index');
