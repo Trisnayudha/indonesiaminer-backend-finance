@@ -351,7 +351,7 @@
     </table>
 
     <div class="additional-info">
-        @if (!empty($invoice->ppn_rate))
+        @if (empty($invoice->ppn_rate))
             <p><strong>Price Excluding VAT</strong></p>
         @endif
         <p>
