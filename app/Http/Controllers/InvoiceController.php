@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use Illuminate\Support\Facades\DB;
+use PDF;
 
 class InvoiceController extends Controller
 {
@@ -453,9 +454,12 @@ class InvoiceController extends Controller
     public function downloadPdf($id)
     {
         $invoice = Invoice::with('items')->findOrFail($id);
-
+        // Menghitung Subtotal
+        $subtotal = $invoice->total_amount - $invoice->ppn_amount;
+        // Menghitung Grand Total
+        $grandTotal = $invoice->total_amount;
         // Pilih view yang akan digunakan untuk PDF. Misalnya, 'invoice.detail'
-        $pdf = PDF::loadView('pdf.template-invoice', compact('invoice'));
+        $pdf = PDF::loadView('pdf.template-invoice', compact('invoice', 'subtotal', 'grandTotal'));
 
         // Anda dapat mengatur opsi tambahan seperti paper size dan orientation
         $pdf->setPaper('A4', 'portrait');
