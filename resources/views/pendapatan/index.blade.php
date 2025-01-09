@@ -245,9 +245,10 @@
                                 <label for="paymentCategory" class="form-label">Payment Category</label>
                                 <select class="form-select" id="paymentCategory" name="paymentCategory" required>
                                     <option value="">Select Category</option>
-                                    <option value="Product Sales">Product Sales</option>
-                                    <option value="Service Revenue">Service Revenue</option>
-                                    <option value="Other Income">Other Income</option>
+                                    <option value="Exhibitor">Exhibitor</option>
+                                    <option value="Sponsors">Sponsors</option>
+                                    <option value="Advertisement">Advertisement</option>
+                                    <option value="Additional Order">Additional Order</option>
                                     <!-- Add more categories if needed -->
                                 </select>
                             </div>
