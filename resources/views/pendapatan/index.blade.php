@@ -256,6 +256,11 @@
                                 <label for="quantity" class="form-label">Quantity</label>
                                 <input type="number" class="form-control" id="quantity" name="quantity" required>
                             </div>
+                            <div class="mb-3">
+                                <label for="" class="form-label">
+                                    <textarea name="notes" id="notes" cols="30" rows="10"></textarea>
+                                </label>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
