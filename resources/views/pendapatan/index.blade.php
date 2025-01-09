@@ -233,6 +233,11 @@
                                     required>
                             </div>
                             <div class="mb-3">
+                                <label for="payment_date" class="form-label">Payment Date</label>
+                                <input type="date" class="form-control @error('payment_date') is-invalid @enderror"
+                                    id="payment_date" name="payment_date" value="" required>
+                            </div>
+                            <div class="mb-3">
                                 <label for="paymentType" class="form-label">Payment Type</label>
                                 <select class="form-select" id="paymentType" name="paymentType" required>
                                     <option value="">Select Payment Type</option>
