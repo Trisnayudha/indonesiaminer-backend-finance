@@ -155,6 +155,9 @@
                                             <option value="Paper"
                                                 {{ old('payment_type', $expense->payment_type) === 'Paper' ? 'selected' : '' }}>
                                                 Paper</option>
+                                            <option value="Credit Card"
+                                                {{ old('payment_type', $expense->payment_type) === 'Credit Card' ? 'selected' : '' }}>
+                                                Credit Card</option>
                                             <!-- Tambahkan opsi lain jika diperlukan -->
                                         </select>
                                         @error('payment_type')

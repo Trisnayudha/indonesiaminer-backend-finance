@@ -305,6 +305,9 @@
                                             {{ old('payment_type') === 'Transfer' ? 'selected' : '' }}>Transfer</option>
                                         <option value="Paper" {{ old('payment_type') === 'Paper' ? 'selected' : '' }}>
                                             Paper</option>
+                                        <option value="Credit Card"
+                                            {{ old('payment_type') === 'Credit Card' ? 'selected' : '' }}>
+                                            Credit Card</option>
                                         <!-- Add more options if needed -->
                                     </select>
                                     @error('payment_type')
