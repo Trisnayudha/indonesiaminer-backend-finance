@@ -224,7 +224,7 @@
                                 <input type="text" class="form-control" id="revenueName" name="revenueName" required>
                             </div>
                             <div class="mb-3">
-                                <label for="rateIDR" class="form-label">Rate IDR Revenue</label>
+                                <label for="rateIDR" class="form-label">Rate IDR Revenue ( optional )</label>
                                 <input type="number" class="form-control" id="rateIDR" name="rateIDR" readonly>
                             </div>
                             <div class="mb-3">
@@ -236,8 +236,8 @@
                                 <label for="paymentType" class="form-label">Payment Type</label>
                                 <select class="form-select" id="paymentType" name="paymentType" required>
                                     <option value="">Select Payment Type</option>
-                                    <option value="Cash">Cash</option>
-                                    <option value="Transfer">Transfer</option>
+                                    <option value="Transfer Bank">Transfer Bank</option>
+                                    <option value="Xendit">Xendit</option>
                                     <!-- Add more options if needed -->
                                 </select>
                             </div>
