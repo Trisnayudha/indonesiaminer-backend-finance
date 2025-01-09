@@ -328,6 +328,17 @@
                                         </option>
                                         <option value="Salary"
                                             {{ old('payment_category') === 'Salary' ? 'selected' : '' }}>Salary</option>
+                                        <option value="Operasional Kantor"
+                                            {{ old('payment_category') === 'Operasional Kantor' ? 'selected' : '' }}>
+                                            Operasional Kantor</option>
+                                        <option value="Website"
+                                            {{ old('payment_category') === 'Website' ? 'selected' : '' }}>Website</option>
+                                        <option value="Beban lain-lain"
+                                            {{ old('payment_category') === 'Beban lain-lain' ? 'selected' : '' }}>Beban
+                                            lain-lain</option>
+                                        <option value="Pameran, Perjalanan, Meeting"
+                                            {{ old('payment_category') === 'Pameran, Perjalanan, Meeting' ? 'selected' : '' }}>
+                                            Pameran, Perjalanan, Meeting</option>
                                         <!-- Add more categories if needed -->
                                     </select>
                                     @error('payment_category')
