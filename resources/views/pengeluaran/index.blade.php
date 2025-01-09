@@ -333,6 +333,9 @@
                                             Operasional Kantor</option>
                                         <option value="Website"
                                             {{ old('payment_category') === 'Website' ? 'selected' : '' }}>Website</option>
+                                        <option value="Digital Subscription"
+                                            {{ old('payment_category') === 'Digital Subscription' ? 'selected' : '' }}>
+                                            Digital Subscription</option>
                                         <option value="Beban lain-lain"
                                             {{ old('payment_category') === 'Beban lain-lain' ? 'selected' : '' }}>Beban
                                             lain-lain</option>

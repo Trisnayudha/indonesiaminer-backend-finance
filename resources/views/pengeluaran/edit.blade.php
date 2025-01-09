@@ -179,6 +179,21 @@
                                             <option value="Salary"
                                                 {{ old('payment_category', $expense->payment_category) === 'Salary' ? 'selected' : '' }}>
                                                 Salary</option>
+                                            <option value="Operasional Kantor"
+                                                {{ old('payment_category', $expense->payment_category) === 'Operasional Kantor' ? 'selected' : '' }}>
+                                                Operasional Kantor</option>
+                                            <option value="Website"
+                                                {{ old('payment_category', $expense->payment_category) === 'Website' ? 'selected' : '' }}>
+                                                Website</option>
+                                            <option value="Digital Subscription"
+                                                {{ old('payment_category', $expense->payment_category) === 'Digital Subscription' ? 'selected' : '' }}>
+                                                Digital Subscription</option>
+                                            <option value="Beban lain-lain"
+                                                {{ old('payment_category', $expense->payment_category) === 'Beban lain-lain' ? 'selected' : '' }}>
+                                                Beban lain-lain</option>
+                                            <option value="Pameran, Perjalanan, Meeting"
+                                                {{ old('payment_category', $expense->payment_category) === 'Pameran, Perjalanan, Meeting' ? 'selected' : '' }}>
+                                                Pameran, Perjalanan, Meeting</option>
                                             <!-- Tambahkan kategori lain sesuai kebutuhan -->
                                         </select>
                                         @error('payment_category')
