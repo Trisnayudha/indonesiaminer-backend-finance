@@ -225,7 +225,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="rateIDR" class="form-label">Rate IDR Revenue</label>
-                                <input type="number" class="form-control" id="rateIDR" name="rateIDR" required>
+                                <input type="number" class="form-control" id="rateIDR" name="rateIDR" readonly>
                             </div>
                             <div class="mb-3">
                                 <label for="revenueAmount" class="form-label">Revenue Amount</label>
