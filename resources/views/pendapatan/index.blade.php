@@ -262,9 +262,9 @@
                                 <input type="number" class="form-control" id="quantity" name="quantity" required>
                             </div>
                             <div class="mb-3">
-                                <label for="" class="form-label">
-                                    <textarea class="form-control" name="notes" id="notes" cols="30" rows="10"></textarea>
+                                <label for="" class="form-label"> Notes
                                 </label>
+                                <textarea class="form-control" name="notes" id="notes" rows="2"></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">

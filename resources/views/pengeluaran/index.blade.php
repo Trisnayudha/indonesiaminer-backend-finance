@@ -329,6 +329,24 @@
                                         <option value="Operational"
                                             {{ old('payment_category') === 'Operational' ? 'selected' : '' }}>Operational
                                         </option>
+                                        <option value="Temporary Worker"
+                                            {{ old('payment_category') === 'Temporary Worker' ? 'selected' : '' }}>
+                                            Temporary Worker
+                                        </option>
+                                        <option value="Graphic Design"
+                                            {{ old('payment_category') === 'Graphic Design' ? 'selected' : '' }}>Graphic
+                                            Design
+                                        </option>
+                                        <option value="Venue"
+                                            {{ old('payment_category') === 'Venue' ? 'selected' : '' }}>Venue
+                                        </option>
+                                        <option value="Produksi"
+                                            {{ old('payment_category') === 'Produksi' ? 'selected' : '' }}>Produksi
+                                        </option>
+                                        <option value="Stand Kontraktor"
+                                            {{ old('payment_category') === 'Stand Kontraktor' ? 'selected' : '' }}>Stand
+                                            Kontraktor
+                                        </option>
                                         <option value="Salary"
                                             {{ old('payment_category') === 'Salary' ? 'selected' : '' }}>Salary</option>
                                         <option value="Operasional Kantor"
