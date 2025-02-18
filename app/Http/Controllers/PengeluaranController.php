@@ -60,17 +60,17 @@ class PengeluaranController extends Controller
                 // Tambahkan warna lain sesuai kebutuhan
             ],
         ];
-
-        $weeklyRevenue = Expense::whereBetween('payment_date', [now()->startOfWeek(), now()->endOfWeek()])
+        // dd($pieChartData);
+        $allExpenses = Expense::whereBetween('payment_date', [now()->startOfWeek(), now()->endOfWeek()])
             ->sum('total');
 
-        $monthlyRevenue = Expense::whereMonth('payment_date', now()->month)
+        $monthlyExpenses = Expense::whereMonth('payment_date', now()->month)
             ->sum('total');
 
-        $yearlyRevenue = Expense::whereYear('payment_date', now()->year)
+        $yearlyExpenses = Expense::whereYear('payment_date', now()->year)
             ->sum('total');
 
-        return view('pengeluaran.index', compact('getData', 'barChartData', 'pieChartData', 'weeklyRevenue', 'monthlyRevenue', 'yearlyRevenue'));
+        return view('pengeluaran.index', compact('getData', 'barChartData', 'pieChartData', 'allExpenses', 'monthlyExpenses', 'yearlyExpenses'));
     }
 
     /**

@@ -10,30 +10,30 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        <h5>Weekly Revenue</h5>
+                        <h5>all Expenses</h5>
                     </div>
                     <div class="card-body">
-                        <h4>Rp {{ number_format($weeklyRevenue, 0, ',', '.') }}</h4>
+                        <h4>Rp {{ number_format($allExpenses, 0, ',', '.') }}</h4>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        <h5>Monthly Revenue</h5>
+                        <h5>Monthly Expenses</h5>
                     </div>
                     <div class="card-body">
-                        <h4>Rp {{ number_format($monthlyRevenue, 0, ',', '.') }}</h4>
+                        <h4>Rp {{ number_format($monthlyExpenses, 0, ',', '.') }}</h4>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        <h5>Yearly Revenue</h5>
+                        <h5>Yearly Expenses</h5>
                     </div>
                     <div class="card-body">
-                        <h4>Rp {{ number_format($yearlyRevenue, 0, ',', '.') }}</h4>
+                        <h4>Rp {{ number_format($yearlyExpenses, 0, ',', '.') }}</h4>
                     </div>
                 </div>
             </div>
@@ -326,9 +326,6 @@
                                         <option value="Marketing"
                                             {{ old('payment_category') === 'Marketing' ? 'selected' : '' }}>Marketing
                                         </option>
-                                        <option value="Operational"
-                                            {{ old('payment_category') === 'Operational' ? 'selected' : '' }}>Operational
-                                        </option>
                                         <option value="Temporary Worker"
                                             {{ old('payment_category') === 'Temporary Worker' ? 'selected' : '' }}>
                                             Temporary Worker
@@ -456,7 +453,7 @@
     <!-- Include Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
     <!-- Include Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
 
     <script>
         $(document).ready(function() {
@@ -600,9 +597,19 @@
                 plugins: {
                     legend: {
                         display: true
+                    },
+                    datalabels: {
+                        color: '#fff', // warna teks label
+                        formatter: function(value, context) {
+                            let dataset = context.chart.data.datasets[0];
+                            let total = dataset.data.reduce((acc, curr) => acc + Number(curr), 0);
+                            let percentage = ((value / total) * 100).toFixed(2) + '%';
+                            return percentage;
+                        }
                     }
                 }
-            }
+            },
+            plugins: [ChartDataLabels] // pastikan plugin di-register
         });
 
         // Buka Modal Secara Otomatis Jika Ada Error

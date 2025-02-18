@@ -176,9 +176,6 @@
                                             <option value="Marketing"
                                                 {{ old('payment_category', $expense->payment_category) === 'Marketing' ? 'selected' : '' }}>
                                                 Marketing</option>
-                                            <option value="Operational"
-                                                {{ old('payment_category', $expense->payment_category) === 'Operational' ? 'selected' : '' }}>
-                                                Operational</option>
                                             <option value="Temporary Worker"
                                                 {{ old('payment_category', $expense->payment_category) === 'Temporary Worker' ? 'selected' : '' }}>
                                                 Temporary Worker</option>

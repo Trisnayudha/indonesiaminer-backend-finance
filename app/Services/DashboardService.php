@@ -103,7 +103,6 @@ class DashboardService
 
         // Net Profit Yearly = Yearly Revenue - Yearly Expenses
         $yearlyNetProfit = ($yearlyRevenueData['current_revenue'] ?? 0) - ($yearlyExpenses ?? 0);
-
         return [
             'weeklyRevenue' => $weeklyRevenueData,
             'monthlyRevenue' => $monthlyRevenueData,

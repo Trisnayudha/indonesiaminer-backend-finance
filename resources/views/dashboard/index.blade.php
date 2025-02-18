@@ -289,7 +289,7 @@
             // Expenses by Category (Pie)
             var expenseByCategory = @json($expenseByCategory);
             var expenseLabels = Object.keys(expenseByCategory);
-            var expenseValues = Object.values(expenseByCategory);
+            var expenseValues = Object.values(expenseByCategory).map(Number); // Konversi ke number
 
             var ctx3 = document.getElementById('expenseByCategoryChart').getContext('2d');
             new Chart(ctx3, {
@@ -308,14 +308,32 @@
                             callbacks: {
                                 label: function(tooltipItem) {
                                     var label = tooltipItem.label || '';
+                                    var dataset = tooltipItem.chart.data.datasets[0];
+                                    var total = dataset.data.reduce(function(sum, val) {
+                                        return sum + Number(val);
+                                    }, 0);
                                     var value = tooltipItem.parsed || 0;
-                                    return label + ': IDR ' + value.toLocaleString();
+                                    var percentage = ((value / total) * 100).toFixed(2);
+                                    return label + ': ' + percentage + '%';
                                 }
+                            }
+                        },
+                        datalabels: {
+                            color: '#fff',
+                            formatter: function(value, context) {
+                                var dataset = context.chart.data.datasets[0];
+                                var total = dataset.data.reduce(function(sum, val) {
+                                    return sum + Number(val);
+                                }, 0);
+                                return ((value / total) * 100).toFixed(2) + '%';
                             }
                         }
                     }
-                }
+                },
+                plugins: [ChartDataLabels] // Register plugin ChartDataLabels
             });
+
+
 
             // Invoice Payment Method (Donut)
             var paymentMethodDistribution = @json($paymentMethodDistribution);
