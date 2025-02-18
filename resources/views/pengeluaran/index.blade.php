@@ -587,14 +587,13 @@
             data: {
                 labels: @json($pieChartData['labels']),
                 datasets: [{
-                    // Pastikan data konversi ke number jika masih string
                     data: @json($pieChartData['data']).map(Number),
                     backgroundColor: @json($pieChartData['backgroundColors']),
-                    // Menggeser slice kecil (di bawah 2%) sejauh 20px
+                    // Geser slice yang persentasenya < 2% keluar 20px agar tampak
                     offset: function(ctx) {
-                        const dataArr = ctx.chart.data.datasets[0].data;
-                        const total = dataArr.reduce((acc, val) => acc + val, 0);
-                        const value = dataArr[ctx.dataIndex];
+                        const dataset = ctx.chart.data.datasets[0].data;
+                        const total = dataset.reduce((acc, val) => acc + val, 0);
+                        const value = dataset[ctx.dataIndex];
                         const pct = (value / total) * 100;
                         return (pct < 2) ? 20 : 0;
                     }
@@ -603,7 +602,6 @@
             options: {
                 responsive: true,
                 plugins: {
-                    // Tooltip tetap menampilkan persentase saat hover (opsional)
                     tooltip: {
                         callbacks: {
                             label: function(context) {
@@ -618,23 +616,20 @@
                     legend: {
                         display: true
                     },
-                    // DataLabels untuk menampilkan persentase
                     datalabels: {
-                        // Supaya label tidak menumpuk di slice yang tipis
-                        anchor: 'end', // Melekat di ujung luar slice
-                        align: 'start', // Label digeser ke luar
-                        offset: 10, // Jarak label dari slice
-                        color: '#000', // Warna label
+                        // Posisikan label di luar slice
+                        anchor: 'end',
+                        align: 'start',
+                        offset: 10,
+                        color: '#000',
                         formatter: function(value, context) {
                             let dataset = context.chart.data.datasets[0];
                             let total = dataset.data.reduce((acc, val) => acc + val, 0);
-                            let percentage = ((value / total) * 100).toFixed(2) + '%';
-                            return percentage;
+                            return ((value / total) * 100).toFixed(2) + '%';
                         }
                     }
                 }
             },
-            // Pastikan plugin datalabels sudah diregister dan di-load
             plugins: [ChartDataLabels]
         });
 
