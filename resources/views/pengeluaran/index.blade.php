@@ -349,6 +349,27 @@
                                         </option>
                                         <option value="Salary"
                                             {{ old('payment_category') === 'Salary' ? 'selected' : '' }}>Salary</option>
+                                        <option value="Printing"
+                                            {{ old('payment_category') === 'Printing' ? 'selected' : '' }}>Printing
+                                        </option>
+                                        <option value="Akomodasi"
+                                            {{ old('payment_category') === 'Akomodasi' ? 'selected' : '' }}>Akomodasi
+                                        </option>
+                                        <option value="Participant"
+                                            {{ old('payment_category') === 'Participant' ? 'selected' : '' }}>Participant
+                                        </option>
+                                        <option value="Media"
+                                            {{ old('payment_category') === 'Media' ? 'selected' : '' }}>Media</option>
+                                        <option value="Gift" {{ old('payment_category') === 'Gift' ? 'selected' : '' }}>
+                                            Gift</option>
+                                        <option value="Konsumsi"
+                                            {{ old('payment_category') === 'Konsumsi' ? 'selected' : '' }}>Konsumsi
+                                        </option>
+                                        <option value="Mc" {{ old('payment_category') === 'Mc' ? 'selected' : '' }}>Mc
+                                        </option>
+                                        <option value="Entertainment"
+                                            {{ old('payment_category') === 'Entertainment' ? 'selected' : '' }}>
+                                            Entertainment</option>
                                         <option value="Operasional Kantor"
                                             {{ old('payment_category') === 'Operasional Kantor' ? 'selected' : '' }}>
                                             Operasional Kantor</option>

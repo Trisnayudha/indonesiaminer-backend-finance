@@ -179,9 +179,48 @@
                                             <option value="Operational"
                                                 {{ old('payment_category', $expense->payment_category) === 'Operational' ? 'selected' : '' }}>
                                                 Operational</option>
+                                            <option value="Temporary Worker"
+                                                {{ old('payment_category', $expense->payment_category) === 'Temporary Worker' ? 'selected' : '' }}>
+                                                Temporary Worker</option>
+                                            <option value="Graphic Design"
+                                                {{ old('payment_category', $expense->payment_category) === 'Graphic Design' ? 'selected' : '' }}>
+                                                Graphic Design</option>
+                                            <option value="Venue"
+                                                {{ old('payment_category', $expense->payment_category) === 'Venue' ? 'selected' : '' }}>
+                                                Venue</option>
+                                            <option value="Produksi"
+                                                {{ old('payment_category', $expense->payment_category) === 'Produksi' ? 'selected' : '' }}>
+                                                Produksi</option>
+                                            <option value="Stand Kontraktor"
+                                                {{ old('payment_category', $expense->payment_category) === 'Stand Kontraktor' ? 'selected' : '' }}>
+                                                Stand Kontraktor</option>
                                             <option value="Salary"
                                                 {{ old('payment_category', $expense->payment_category) === 'Salary' ? 'selected' : '' }}>
                                                 Salary</option>
+                                            <option value="Printing"
+                                                {{ old('payment_category', $expense->payment_category) === 'Printing' ? 'selected' : '' }}>
+                                                Printing</option>
+                                            <option value="Akomodasi"
+                                                {{ old('payment_category', $expense->payment_category) === 'Akomodasi' ? 'selected' : '' }}>
+                                                Akomodasi</option>
+                                            <option value="Participant"
+                                                {{ old('payment_category', $expense->payment_category) === 'Participant' ? 'selected' : '' }}>
+                                                Participant</option>
+                                            <option value="Media"
+                                                {{ old('payment_category', $expense->payment_category) === 'Media' ? 'selected' : '' }}>
+                                                Media</option>
+                                            <option value="Gift"
+                                                {{ old('payment_category', $expense->payment_category) === 'Gift' ? 'selected' : '' }}>
+                                                Gift</option>
+                                            <option value="Konsumsi"
+                                                {{ old('payment_category', $expense->payment_category) === 'Konsumsi' ? 'selected' : '' }}>
+                                                Konsumsi</option>
+                                            <option value="Mc"
+                                                {{ old('payment_category', $expense->payment_category) === 'Mc' ? 'selected' : '' }}>
+                                                Mc</option>
+                                            <option value="Entertainment"
+                                                {{ old('payment_category', $expense->payment_category) === 'Entertainment' ? 'selected' : '' }}>
+                                                Entertainment</option>
                                             <option value="Operasional Kantor"
                                                 {{ old('payment_category', $expense->payment_category) === 'Operasional Kantor' ? 'selected' : '' }}>
                                                 Operasional Kantor</option>
@@ -197,7 +236,7 @@
                                             <option value="Pameran, Perjalanan, Meeting"
                                                 {{ old('payment_category', $expense->payment_category) === 'Pameran, Perjalanan, Meeting' ? 'selected' : '' }}>
                                                 Pameran, Perjalanan, Meeting</option>
-                                            <!-- Tambahkan kategori lain sesuai kebutuhan -->
+                                            <!-- Tambahkan kategori lain jika diperlukan -->
                                         </select>
                                         @error('payment_category')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -214,6 +253,7 @@
                                         @enderror
                                     </div>
                                 </div>
+
 
                                 <!-- Row 6: Remarks & Attachment -->
                                 <div class="row">
