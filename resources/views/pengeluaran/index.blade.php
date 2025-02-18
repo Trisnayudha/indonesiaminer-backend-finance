@@ -554,16 +554,27 @@
             });
         });
 
-        // Chart.js Initialization
+        // Ambil data asli dari controller
+        var totals = @json($barChartData['totals']).map(Number);
+        var categories = @json($barChartData['categories']);
+
+        // Buat array ticks dengan memasukkan semua nilai totals + 0
+        var tickValues = totals.concat(0);
+
+        // Hilangkan duplikat dan urutkan ascending
+        var customTicks = [...new Set(tickValues)].sort(function(a, b) {
+            return a - b;
+        });
+
         var ctxBar = document.getElementById('expenseBarChart').getContext('2d');
         var expenseBarChart = new Chart(ctxBar, {
             type: 'bar',
             data: {
-                labels: @json($barChartData['categories']),
+                labels: categories,
                 datasets: [{
                     label: 'Expense by Category',
-                    data: @json($barChartData['totals']),
-                    backgroundColor: '#007bff' // Customize color
+                    data: totals,
+                    backgroundColor: '#007bff'
                 }]
             },
             options: {
@@ -571,7 +582,16 @@
                 scales: {
                     y: {
                         beginAtZero: true,
+                        // Override ticks sehingga sumbu Y hanya menggunakan nilai-nilai dari customTicks
+                        afterBuildTicks: function(axis) {
+                            axis.ticks = customTicks.map(function(value) {
+                                return {
+                                    value: value
+                                };
+                            });
+                        },
                         ticks: {
+                            // Format label sumbu Y sebagai Rupiah
                             callback: function(value) {
                                 return 'Rp ' + value.toLocaleString();
                             }
@@ -580,6 +600,8 @@
                 }
             }
         });
+
+
 
         // Data asli dari server
         const realLabels = @json($pieChartData['labels']);
