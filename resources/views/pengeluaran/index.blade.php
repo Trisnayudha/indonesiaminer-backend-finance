@@ -581,22 +581,47 @@
             }
         });
 
+        // Data asli dari server
+        const realLabels = @json($pieChartData['labels']);
+        const realData = @json($pieChartData['data']).map(Number); // misalnya: [95, 1, 1, 1, 1, 1]
+
+        // Hitung total data asli
+        const totalReal = realData.reduce((acc, val) => acc + val, 0);
+
+        // Hitung persentase asli per slice
+        const realPercentages = realData.map(val => (val / totalReal) * 100);
+
+        // Jumlah slice
+        const n = realData.length;
+
+        // Cari nilai maksimum (persentase)
+        const maxReal = Math.max(...realPercentages);
+
+        // Transformasi data untuk keperluan visual jika nilai maksimum > 80%
+        let visualData;
+        if (maxReal > 80) {
+            const visualMax = 50; // batas maksimum visual untuk slice dominan (misalnya 50%)
+            const otherVisual = (100 - visualMax) / (n - 1); // sisanya dibagi rata
+            visualData = realData.map(val => {
+                const pct = (val / totalReal) * 100;
+                // Jika slice ini adalah yang terbesar, pakai visualMax, selain itu pakai otherVisual
+                return (pct === maxReal) ? visualMax : otherVisual;
+            });
+        } else {
+            // Jika tidak ada slice yang dominan, gunakan data asli
+            visualData = realData;
+        }
+
         var ctxPie = document.getElementById('expensePieChart').getContext('2d');
         var expensePieChart = new Chart(ctxPie, {
             type: 'pie',
             data: {
-                labels: @json($pieChartData['labels']),
+                labels: realLabels, // label asli
                 datasets: [{
-                    data: @json($pieChartData['data']).map(Number),
+                    // Gunakan data visual untuk menggambar chart
+                    data: visualData,
                     backgroundColor: @json($pieChartData['backgroundColors']),
-                    // Geser slice yang persentasenya < 2% keluar 20px agar tampak
-                    offset: function(ctx) {
-                        const dataset = ctx.chart.data.datasets[0].data;
-                        const total = dataset.reduce((acc, val) => acc + val, 0);
-                        const value = dataset[ctx.dataIndex];
-                        const pct = (value / total) * 100;
-                        return (pct < 2) ? 20 : 0;
-                    }
+                    // (Optional) jika masih ingin offset tambahan, bisa tambahkan di sini
                 }]
             },
             options: {
@@ -605,11 +630,10 @@
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                let dataset = context.chart.data.datasets[0];
-                                let total = dataset.data.reduce((acc, val) => acc + val, 0);
-                                let currentValue = Number(context.parsed);
-                                let percentage = ((currentValue / total) * 100).toFixed(2);
-                                return context.label + ': ' + percentage + '%';
+                                // Gunakan data asli untuk tooltip
+                                const idx = context.dataIndex;
+                                const realPct = ((realData[idx] / totalReal) * 100).toFixed(2);
+                                return realLabels[idx] + ': ' + realPct + '%';
                             }
                         }
                     },
@@ -617,21 +641,20 @@
                         display: true
                     },
                     datalabels: {
-                        // Posisikan label di luar slice
-                        anchor: 'end',
-                        align: 'start',
-                        offset: 10,
                         color: '#000',
                         formatter: function(value, context) {
-                            let dataset = context.chart.data.datasets[0];
-                            let total = dataset.data.reduce((acc, val) => acc + val, 0);
-                            return ((value / total) * 100).toFixed(2) + '%';
+                            // Tampilkan label dengan persentase asli
+                            const idx = context.dataIndex;
+                            const realPct = ((realData[idx] / totalReal) * 100).toFixed(2) + '%';
+                            return realPct;
                         }
                     }
                 }
             },
+            // Pastikan plugin datalabels sudah di-register
             plugins: [ChartDataLabels]
         });
+
 
 
         // Buka Modal Secara Otomatis Jika Ada Error
