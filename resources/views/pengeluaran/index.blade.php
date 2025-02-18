@@ -587,24 +587,23 @@
             data: {
                 labels: @json($pieChartData['labels']),
                 datasets: [{
+                    // Pastikan data konversi ke number jika masih string
                     data: @json($pieChartData['data']).map(Number),
                     backgroundColor: @json($pieChartData['backgroundColors']),
-                    // Tambahkan logika offset di sini
+                    // Menggeser slice kecil (di bawah 2%) sejauh 20px
                     offset: function(ctx) {
-                        // dataset data
-                        const dataset = ctx.chart.data.datasets[0].data;
-                        const total = dataset.reduce((acc, val) => acc + val, 0);
-                        const value = dataset[ctx.dataIndex];
-                        const percentage = (value / total) * 100;
-
-                        // Jika persentase < 2%, tarik slice keluar 20px
-                        return (percentage < 2) ? 20 : 0;
+                        const dataArr = ctx.chart.data.datasets[0].data;
+                        const total = dataArr.reduce((acc, val) => acc + val, 0);
+                        const value = dataArr[ctx.dataIndex];
+                        const pct = (value / total) * 100;
+                        return (pct < 2) ? 20 : 0;
                     }
                 }]
             },
             options: {
                 responsive: true,
                 plugins: {
+                    // Tooltip tetap menampilkan persentase saat hover (opsional)
                     tooltip: {
                         callbacks: {
                             label: function(context) {
@@ -619,20 +618,23 @@
                     legend: {
                         display: true
                     },
+                    // DataLabels untuk menampilkan persentase
                     datalabels: {
-                        color: '#fff',
+                        // Supaya label tidak menumpuk di slice yang tipis
+                        anchor: 'end', // Melekat di ujung luar slice
+                        align: 'start', // Label digeser ke luar
+                        offset: 10, // Jarak label dari slice
+                        color: '#000', // Warna label
                         formatter: function(value, context) {
                             let dataset = context.chart.data.datasets[0];
-                            let total = dataset.data.reduce((acc, val) => acc + Number(val), 0);
-                            return ((value / total) * 100).toFixed(2) + '%';
-                        },
-                        // Supaya label bisa berada di luar slice
-                        anchor: 'end',
-                        align: 'start',
-                        offset: 10
+                            let total = dataset.data.reduce((acc, val) => acc + val, 0);
+                            let percentage = ((value / total) * 100).toFixed(2) + '%';
+                            return percentage;
+                        }
                     }
                 }
             },
+            // Pastikan plugin datalabels sudah diregister dan di-load
             plugins: [ChartDataLabels]
         });
 
